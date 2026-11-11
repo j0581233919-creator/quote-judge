@@ -31,6 +31,15 @@ from .parser import (
 )
 from .extractor import QuotationExtractor
 
+from .comparator import (
+    QuotationComparator,
+    ComparisonReport,
+    ItemComparison,
+    TermsComparison,
+    SupplierScore,
+    token_similarity,
+)
+
 __all__ = [
     "Currency",
     "Incoterm",
@@ -53,4 +62,10 @@ __all__ = [
     "OCRRequiredError",
     "UnsupportedFormatError",
     "QuotationExtractor",
+    "QuotationComparator",
+    "ComparisonReport",
+    "ItemComparison",
+    "TermsComparison",
+    "SupplierScore",
+    "token_similarity",
 ]
