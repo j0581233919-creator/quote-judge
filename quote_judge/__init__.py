@@ -1,6 +1,6 @@
 """QuoteJudge: Evidence-backed supplier quotation comparison and missing terms auditor."""
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 from .models import (
     Currency,
