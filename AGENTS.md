@@ -19,17 +19,31 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
 
 ## Task Ledger Summary
-- **Current Task**: QJ-004 — Bilingual Clarification Generator & Export Formats.
-- **Current Lifecycle State**: `IN_PROGRESS`
+- **Current Task**: QJ-005 — CLI & End-to-End Verification Pipeline.
+- **Current Lifecycle State**: `REVIEW_PENDING`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: 6673914
-- **Independent Review Status**: Milestones QJ-001, QJ-002, and QJ-003 Certified ACCEPTED; 42/42 tests passing.
+- **Last Verified Commit**: 426473e
+- **Independent Review Status**: Milestones QJ-001, QJ-002, QJ-003, and QJ-004 Certified ACCEPTED; QJ-005 implemented with 67/67 tests passing and submitted for independent EGM Goldfish review.
 - **Completed Tasks**:
   - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
   - QJ-002: Text-based PDF & Structured Document Ingestion (ACCEPTED)
   - QJ-003: Comparative Quotation Engine & Missing Terms Auditor (ACCEPTED)
+  - QJ-004: Bilingual Clarification Generator & Export Formats (ACCEPTED)
+
+## Verification Criteria for QJ-005
+1. **Command Line Interface (`quote_judge/cli.py`)**:
+   - `quote-judge validate -f <file> [--json]`: validates document integrity, line-item arithmetic, source evidence, and audits missing terms.
+   - `quote-judge compare -f <file1> <file2> ... [--output <md>] [--csv <csv>] [--json <json>] [--rates <mapping>] [--base-currency <curr>]`: multi-supplier comparison with console tables and multi-format exports.
+   - `quote-judge clarify -f <file1> ... -o <output_dir> [--lang bilingual|en|ar] [--format md|json]`: batch clarification letter generation.
+   - `quote-judge demo`: runnable interactive / self-contained demonstration.
+2. **Release Documentation & Packaging (`INSTALL.md`, `README.md`, `pyproject.toml`)**:
+   - Complete installation instructions and CLI reference.
+   - Zero external PyPI dependencies guarantee.
+   - Honest scope: explicit boundaries regarding selectable PDF text and non-fabrication of exchange rates.
+3. **Automated Test Suite**:
+   - 100% passing tests including CLI subcommands and error flows (`python3 -m unittest discover tests`).
 
 ## Verification Criteria for QJ-004
 1. **Bilingual Clarification Generator (`quote_judge/clarification.py`)**:

@@ -52,6 +52,7 @@ from .export import (
     sanitize_csv_row,
     desanitize_csv_row,
 )
+from .demo import run_demo
 
 __all__ = [
     "Currency",
@@ -89,4 +90,5 @@ __all__ = [
     "desanitize_csv_cell",
     "sanitize_csv_row",
     "desanitize_csv_row",
+    "run_demo",
 ]
