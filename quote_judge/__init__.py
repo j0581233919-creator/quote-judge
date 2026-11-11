@@ -23,6 +23,14 @@ from .evidence import (
     verify_evidence_span,
 )
 
+from .parser import (
+    DocumentLoader,
+    LoadedDocument,
+    OCRRequiredError,
+    UnsupportedFormatError,
+)
+from .extractor import QuotationExtractor
+
 __all__ = [
     "Currency",
     "Incoterm",
@@ -40,4 +48,9 @@ __all__ = [
     "calculate_line_number",
     "extract_snippet_with_context",
     "verify_evidence_span",
+    "DocumentLoader",
+    "LoadedDocument",
+    "OCRRequiredError",
+    "UnsupportedFormatError",
+    "QuotationExtractor",
 ]

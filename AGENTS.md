@@ -20,14 +20,33 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 
 ## Task Ledger Summary
 - **Current Task**: QJ-002 — Text-based PDF & Structured Document Ingestion.
-- **Current Lifecycle State**: `READY`
+- **Current Lifecycle State**: `IN_PROGRESS`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: a7ade85
+- **Last Verified Commit**: a40cd16
 - **Independent Review Status**: Milestone QJ-001 Certified ACCEPTED; 20/20 tests passing.
 - **Completed Tasks**:
   - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
+
+## Verification Criteria for QJ-002
+1. **Multi-Format Ingestion (`quote_judge/parser.py`)**:
+   - Ingests plain text (`.txt`), Markdown (`.md`), CSV (`.csv`), JSON (`.json`), and text-based PDFs (`.pdf` via `/usr/bin/pdftotext -layout`).
+   - Clean, fail-closed handling for unscanned/corrupt/OCR-only PDFs with explicit error diagnostics: "Scanned or image-only PDF detected; QuoteJudge requires selectable text and does not simulate or hallucinate OCR".
+2. **Deterministic Evidence-Backed Fact Extractor (`quote_judge/extractor.py`)**:
+   - Header & metadata extraction: supplier name, quote ID, quote date, validity/expiry date, currency.
+   - Line items table parsing: tabular text columns, CSV records, bulleted entries.
+   - Commercial totals & deductions: subtotal, discount, freight/shipping, VAT/sales tax, grand total.
+   - Commercial conditions: payment terms, delivery lead time, Incoterms 2020, warranty period.
+   - 100% source grounding: Every single extracted field is linked to a verified `EvidenceSpan` with exact character offsets.
+3. **Automated Consistency Validation**:
+   - Every ingested quotation automatically validates arithmetic consistency (`quote.validate(source_text)`).
+   - Zero-hallucination guarantee: All offsets verified against raw ingested document text.
+4. **Pure Standard Library & Local Tooling**:
+   - Pure Python standard library with optional local POSIX binary (`/usr/bin/pdftotext`).
+   - Zero external PyPI dependencies (`dependencies = []`).
+5. **Comprehensive Test Suite & Demonstrations**:
+   - Automated tests covering plain text, CSV, markdown tables, multilingual Arabic/English quotes, PDF text parsing, and adversarial inputs (malformed tables, zero text).
 
 ## Verification Criteria for QJ-001
 1. **Typed Schemas (`quote_judge/models.py`)**:
