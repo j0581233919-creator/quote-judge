@@ -279,10 +279,15 @@ class QuotationExtractor:
         return None, None
 
     def _extract_total(self, text: str, doc_id: str) -> Tuple[Optional[float], Optional[EvidenceSpan]]:
-        # Find the last match for grand total (often at bottom of quote)
-        matches = list(self._PATTERNS_TOTAL[0].finditer(text))
-        if matches:
-            last_m = matches[-1]
+        # Find the last match for grand total (often at bottom of quote) across all total patterns
+        all_matches = []
+        for pat in self._PATTERNS_TOTAL:
+            all_matches.extend(list(pat.finditer(text)))
+
+        if all_matches:
+            # Sort by match start offset to pick the bottom-most grand total
+            all_matches.sort(key=lambda m: m.start())
+            last_m = all_matches[-1]
             val_str = last_m.group(1).strip()
             parsed = parse_float_safe(val_str)
             if parsed is not None:

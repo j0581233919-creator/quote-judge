@@ -19,15 +19,39 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
 
 ## Task Ledger Summary
-- **Current Task**: QJ-002 — Text-based PDF & Structured Document Ingestion.
-- **Current Lifecycle State**: `IN_PROGRESS`
+- **Current Task**: QJ-003 — Comparative Quotation Engine & Missing Terms Auditor.
+- **Current Lifecycle State**: `READY`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: a40cd16
-- **Independent Review Status**: Milestone QJ-001 Certified ACCEPTED; 20/20 tests passing.
+- **Last Verified Commit**: f85ec80
+- **Independent Review Status**: Milestones QJ-001 and QJ-002 Certified ACCEPTED; 35/35 tests passing.
 - **Completed Tasks**:
   - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
+  - QJ-002: Text-based PDF & Structured Document Ingestion (ACCEPTED)
+
+## Verification Criteria for QJ-003
+1. **Multi-Supplier Quotation Comparator (`quote_judge/comparator.py`)**:
+   - Compares 2 or more supplier quotations (`List[Quotation]`).
+   - Line-item fuzzy / SKU alignment across quotes (matching identical or equivalent products despite naming variations).
+   - Unit price comparison, price variance calculation, and best-price identification per item and overall.
+2. **Commercial Conditions & Landed Cost Analysis**:
+   - Payment terms side-by-side comparison (cash, advance %, credit period, LC).
+   - Delivery lead time comparison (ranking by days to deliver).
+   - Incoterms & freight analysis (identifying landed cost risks when shipping/freight is excluded).
+   - Warranty duration and coverage comparison.
+3. **Multi-Currency Policy**:
+   - Same-currency comparisons performed directly.
+   - Cross-currency comparisons: strictly requires explicit caller-provided exchange rates (`exchange_rates` dict). Never fabricates live rates. If rates not provided, preserves original currencies and separates comparisons cleanly.
+4. **Missing Terms Synthesis**:
+   - Cross-supplier matrix of missing commercial conditions.
+   - Highlights procurement risks where a low-price quote is missing critical terms (e.g., no warranty, unspecified tax, excluded freight).
+5. **Weighted Decision Matrix**:
+   - Configurable scoring weights (price, lead time, warranty, payment terms) producing transparent, deterministic supplier rankings.
+6. **Zero External Dependencies**:
+   - 100% pure Python standard library runtime.
+7. **Automated Test Suite**:
+   - Multi-quote comparison tests, unit normalization, cross-currency guards, and missing term matrix verification.
 
 ## Verification Criteria for QJ-002
 1. **Multi-Format Ingestion (`quote_judge/parser.py`)**:
