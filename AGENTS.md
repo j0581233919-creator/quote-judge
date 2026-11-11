@@ -19,24 +19,25 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
 
 ## Task Ledger Summary
-- **Current Task**: QJ-005 — CLI & End-to-End Verification Pipeline.
-- **Current Lifecycle State**: `REVIEW_PENDING`
+- **Current Status**: All Milestones (QJ-001 through QJ-005) Completed and Certified ACCEPTED.
+- **Current Lifecycle State**: `RELEASE_READY`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: 426473e
-- **Independent Review Status**: Milestones QJ-001, QJ-002, QJ-003, and QJ-004 Certified ACCEPTED; QJ-005 implemented with 67/67 tests passing and submitted for independent EGM Goldfish review.
+- **Last Verified Commit**: 4bbd31c (QJ-005 independently audited and certified ACCEPTED)
+- **Independent Review Status**: ALL MILESTONES ACCEPTED (QJ-001, QJ-002, QJ-003, QJ-004, QJ-005 certified ACCEPTED by EGM Goldfish Codebase Details Auditor; 67/67 tests passing).
 - **Completed Tasks**:
   - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
   - QJ-002: Text-based PDF & Structured Document Ingestion (ACCEPTED)
   - QJ-003: Comparative Quotation Engine & Missing Terms Auditor (ACCEPTED)
   - QJ-004: Bilingual Clarification Generator & Export Formats (ACCEPTED)
+  - QJ-005: CLI & End-to-End Verification Pipeline (ACCEPTED)
 
 ## Verification Criteria for QJ-005
 1. **Command Line Interface (`quote_judge/cli.py`)**:
    - `quote-judge validate -f <file> [--json]`: validates document integrity, line-item arithmetic, source evidence, and audits missing terms.
    - `quote-judge compare -f <file1> <file2> ... [--output <md>] [--csv <csv>] [--json <json>] [--rates <mapping>] [--base-currency <curr>]`: multi-supplier comparison with console tables and multi-format exports.
-   - `quote-judge clarify -f <file1> ... -o <output_dir> [--lang bilingual|en|ar] [--format md|json]`: batch clarification letter generation.
+   - `quote-judge clarify -f <file1> ... -o <output_dir> [--format md|json] [--buyer-company <str>] [--contact-person <str>]`: batch bilingual clarification letter generation.
    - `quote-judge demo`: runnable interactive / self-contained demonstration.
 2. **Release Documentation & Packaging (`INSTALL.md`, `README.md`, `pyproject.toml`)**:
    - Complete installation instructions and CLI reference.
