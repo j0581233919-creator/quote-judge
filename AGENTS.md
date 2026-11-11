@@ -19,13 +19,15 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
 
 ## Task Ledger Summary
-- **Current Task**: QJ-001 — Supplier Quotation Data Models & Evidence Extraction.
-- **Current Lifecycle State**: `IN_PROGRESS`
+- **Current Task**: QJ-002 — Text-based PDF & Structured Document Ingestion.
+- **Current Lifecycle State**: `READY`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: bf7c0d8
-- **Independent Review Status**: Pending implementation.
+- **Last Verified Commit**: a7ade85
+- **Independent Review Status**: Milestone QJ-001 Certified ACCEPTED; 20/20 tests passing.
+- **Completed Tasks**:
+  - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
 
 ## Verification Criteria for QJ-001
 1. **Typed Schemas (`quote_judge/models.py`)**:
