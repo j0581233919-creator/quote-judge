@@ -1,12 +1,12 @@
 # QuoteJudge Task Ledger
 
 ## Current Context
-- **Current Status**: All Milestones (QJ-001 through QJ-005) Completed and Certified ACCEPTED.
-- **Current Lifecycle State**: `RELEASE_READY`
+- **Current Status**: All Milestones (QJ-001 through QJ-005) Completed and Certified ACCEPTED; v1.0.0 Published to GitHub.
+- **Current Lifecycle State**: `PUBLISHED`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Branch**: main
-- **Last Verified Commit**: 4bbd31c (QJ-005 Certified ACCEPTED)
-- **Independent Review Status**: ALL MILESTONES ACCEPTED (QJ-001, QJ-002, QJ-003, QJ-004, and QJ-005 independently audited and certified ACCEPTED by EGM Goldfish Codebase Details Auditor; 67/67 tests passing)
+- **Last Verified Commit**: 64aee38 (v1.0.0 Release Tagged)
+- **Independent Review Status**: ALL MILESTONES ACCEPTED (QJ-001 through QJ-005 independently audited and certified ACCEPTED; publication safety gate certified ACCEPTED by independent EGM Goldfish Auditor subagent f384f0e6-5777-4eb3-b3f9-113394693bc8; 67/67 tests passing).
 
 ## Backlog
 | Task ID | Description | State | Owner | Acceptance Criteria |
@@ -114,6 +114,12 @@
   - Independent review receipt: EGM Goldfish Codebase Details Auditor (`egm-codebase-details` subagent `ced8b3fc-5125-4642-813f-34e903281167`) delivered official **ACCEPTED** verdict recorded in `reviews/EGM_QJ005_ACCEPTANCE_VERDICT.md`.
   - QJ-005 lifecycle state: **ACCEPTED**.
   - Overall project status: **RELEASE_READY** (all milestones QJ-001 through QJ-005 certified ACCEPTED; 67/67 automated tests passing).
+- **2026-11-12T00:20**: Public Release v1.0.0 & Public GitHub Publication:
+  - Repository created: `https://github.com/j0581233919-creator/quote-judge`
+  - Release created: `https://github.com/j0581233919-creator/quote-judge/releases/tag/v1.0.0`
+  - Release artifact uploaded: `quote-judge-v1.0.0.zip` (108,836 bytes, SHA-256 `025e4d20ed88c58acc9ff77dc4bd8262a08b76ac9f97b8b3f9c692eed1b0241f`).
+  - Independent safety gate audit receipt: EGM Goldfish Auditor subagent `f384f0e6-5777-4eb3-b3f9-113394693bc8` delivered official **ACCEPTED** verdict recorded in `reviews/EGM_RELEASE_GATE_ACCEPTANCE.md`.
+  - Final Lifecycle State: **`PUBLISHED`**.
 
 ## Limitations & Notes
 - Requires text-based PDF or structured text input; OCR capability is not simulated or assumed.
