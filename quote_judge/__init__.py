@@ -40,6 +40,19 @@ from .comparator import (
     token_similarity,
 )
 
+from .clarification import (
+    ClarificationQuestion,
+    ClarificationLetter,
+    BilingualClarificationGenerator,
+)
+from .export import (
+    QuotationExporter,
+    sanitize_csv_cell,
+    desanitize_csv_cell,
+    sanitize_csv_row,
+    desanitize_csv_row,
+)
+
 __all__ = [
     "Currency",
     "Incoterm",
@@ -68,4 +81,12 @@ __all__ = [
     "TermsComparison",
     "SupplierScore",
     "token_similarity",
+    "ClarificationQuestion",
+    "ClarificationLetter",
+    "BilingualClarificationGenerator",
+    "QuotationExporter",
+    "sanitize_csv_cell",
+    "desanitize_csv_cell",
+    "sanitize_csv_row",
+    "desanitize_csv_row",
 ]

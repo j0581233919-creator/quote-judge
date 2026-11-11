@@ -2,10 +2,10 @@
 
 ## Current Context
 - **Current Task**: QJ-004 — Bilingual Clarification Generator & Export Formats.
-- **Current Lifecycle State**: `READY`
+- **Current Lifecycle State**: `IN_PROGRESS`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Branch**: main
-- **Last Verified Commit**: 992942a (Milestone QJ-003 Certified ACCEPTED)
+- **Last Verified Commit**: 6673914 (Milestone QJ-003 Certified ACCEPTED)
 - **Independent Review Status**: ACCEPTED (Milestones QJ-001, QJ-002, and QJ-003 independently audited and certified ACCEPTED by EGM Goldfish Auditor; 42/42 tests passing)
 
 ## Backlog
@@ -14,7 +14,7 @@
 | QJ-001  | Supplier Quotation Data Models & Evidence Extraction | **ACCEPTED** | Gemini Flash | 1. Typed schemas for `Quotation`, `LineItem`, `Terms`, `EvidenceSpan`, `Incoterm`, and `Currency`.<br>2. Exact source offset grounding (document, page, line, char start/end, text snippet).<br>3. Mathematical and logical consistency validation (unit price * qty vs total, subtotal + tax + shipping vs grand total).<br>4. Missing/unspecified terms detection (warranty, payment terms, validity, incoterms, tax inclusion, shipping inclusion).<br>5. Pure Python standard library with zero external dependencies.<br>6. Automated test suite passing with 0 failures.<br>7. Independent review by EGM Goldfish Auditor.<br>*Certified ACCEPTED by EGM Goldfish Auditor.* |
 | QJ-002  | Text-based PDF & Structured Document Ingestion | **ACCEPTED** | Gemini Flash | 1. Multi-format ingestion engine (`quote_judge/parser.py`) supporting `.txt`, `.md`, `.csv`, `.json`, and text-based `.pdf` via `/usr/bin/pdftotext -layout`.<br>2. Fail-closed refusal for scanned or image-only PDFs (`OCRRequiredError`) with honest diagnostics.<br>3. Multi-encoding fallback (UTF-8, UTF-8-SIG, CP1256, Latin-1).<br>4. Deterministic fact extractor (`quote_judge/extractor.py`) across headers, line items, commercial conditions, and totals.<br>5. 100% exact source offset grounding for all extracted facts.<br>6. Automated consistency validation (`quote.validate()`).<br>7. Zero external PyPI dependencies.<br>8. Automated test suite passing with 0 failures (35/35 OK).<br>*Certified ACCEPTED by EGM Goldfish Auditor.* |
 | QJ-003  | Comparative Quotation Engine & Missing Terms Auditor | **ACCEPTED** | Gemini Flash | 1. Multi-supplier comparative engine (`quote_judge/comparator.py`) with line-item token similarity alignment.<br>2. Side-by-side terms comparison (payment terms, lead times with fastest supplier detection, Incoterms + named place, warranty with longest warranty detection, tax/shipping inclusion flags, MOQ).<br>3. Strict anti-hallucination multi-currency policy (refuses to invent exchange rates, requires explicit rates for conversion, preserves native currencies with clear audit notes).<br>4. Cross-supplier missing terms matrix compiling bilingual `MissingTermAlert` records.<br>5. Deterministic, normalized multi-criteria scoring algorithm (0 to 100) with configurable weights.<br>6. Clean Markdown tabular reporting and dictionary serialization.<br>7. Zero external PyPI dependencies.<br>8. Automated test suite passing with 0 failures (42/42 OK).<br>*Certified ACCEPTED by EGM Goldfish Auditor.* |
-| QJ-004  | Bilingual Clarification Generator & Export Formats | READY | Pending | Markdown/CSV exports and grounded AR/EN clarification drafts. |
+| QJ-004  | Bilingual Clarification Generator & Export Formats | **IN_PROGRESS** | Gemini Flash | Markdown/CSV exports and grounded AR/EN clarification drafts. |
 | QJ-005  | CLI & End-to-End Verification Pipeline | READY | Pending | Behavioral test suite and end-to-end multi-supplier comparison demo. |
 
 ---
