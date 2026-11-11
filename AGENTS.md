@@ -17,3 +17,31 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 
 ## Lifecycle States
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
+
+## Task Ledger Summary
+- **Current Task**: QJ-001 — Supplier Quotation Data Models & Evidence Extraction.
+- **Current Lifecycle State**: `IN_PROGRESS`
+- **Current Owner**: Gemini Flash (Lead Engineering Executor).
+- **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
+- **Branch**: main
+- **Last Verified Commit**: bf7c0d8
+- **Independent Review Status**: Pending implementation.
+
+## Verification Criteria for QJ-001
+1. **Typed Schemas (`quote_judge/models.py`)**:
+   - `Quotation`, `LineItem`, `Terms`, `EvidenceSpan`, `Incoterm`, `Currency`, and validation results.
+   - Comprehensive serialization (`to_dict`, `from_dict`) and JSON round-tripping.
+2. **Exact Source Grounding (`quote_judge/evidence.py` & `EvidenceSpan`)**:
+   - Explicit document identifier, page number (optional 1-indexed), line number (optional 1-indexed), character start and end offsets, and verbatim text snippet.
+   - Grounding verification: methods to verify that `start_char` to `end_char` within source document exactly matches `exact_text`.
+   - Utility functions to locate exact string offsets and construct verifiable `EvidenceSpan` instances.
+3. **Mathematical & Business Consistency Validation**:
+   - Line-item level: `unit_price * quantity` vs `total_price` (with discount tolerance).
+   - Quotation level: `sum(line_items)` vs `subtotal`, and `subtotal + tax_amount + shipping_amount` vs `total_amount`.
+   - Currency consistency across line items and totals.
+4. **Missing Terms Auditor**:
+   - Flags missing or ambiguous commercial terms: payment terms, delivery lead time, validity / expiry date, Incoterms, warranty terms, tax inclusion, shipping inclusion, MOQ.
+5. **Zero External Dependencies**:
+   - Pure Python standard library (dataclasses, typing, enum, math, json, re, datetime).
+6. **Automated Behavioral Test Suite**:
+   - 100% test pass rate covering schema validation, evidence verification, mathematical consistency, missing term detection, and adversarial edge cases.

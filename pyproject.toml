@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quote-judge"
+version = "0.1.0"
+description = "Evidence-backed supplier quotation comparison and missing terms auditor."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "QuoteJudge Contributors", email = "contributors@localhost"}
+]
+keywords = ["quotation", "procurement", "comparison", "evidence-extraction", "missing-terms", "bilingual"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Customer Service",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Accounting",
+]
+dependencies = []
+
+[project.scripts]
+quote-judge = "quote_judge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["quote_judge*"]
