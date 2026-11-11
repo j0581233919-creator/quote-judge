@@ -9,7 +9,11 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 3. **Missing Terms Detection**: Explicitly detect and highlight missing terms (e.g., warranty, shipping fees, tax/VAT inclusion, validity period).
 4. **Side-by-Side Comparison**: Generate structured tabular comparison and clear exportable summaries (JSON, CSV, Markdown).
 5. **Bilingual Clarification**: Formulate clear supplier clarification inquiries in Arabic and English for missing or ambiguous terms.
-6. **Independence**: Flash must not certify its own implementation as independently reviewed. Codex or independent reviewer certifies review status.
+6. **Independent Review Requirement & Codex Exclusion Policy**:
+   - OpenAI Codex CLI and API are **strictly disabled** for this development program (CatalogCopilot, QuoteJudge, BayanGate).
+   - Never invoke Codex directly or indirectly (via CLI, AGY, Mezo, Hermes, MezoExecutor, EGM, or fallback loops).
+   - Independent engineering review and certification are conducted via verified Google Elephant-Goldfish Model (EGM) Goldfish reviewers (`egm-codebase-details` and `egm-structural`) using genuine fresh-context subagents.
+   - Flash/Executor agents must NOT certify their own implementation as independently reviewed.
 
 ## Lifecycle States
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
