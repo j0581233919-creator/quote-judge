@@ -124,6 +124,14 @@ class TestQuotationComparator(unittest.TestCase):
         # Verify lowest total cost supplier
         self.assertEqual(report.lowest_total_cost_supplier, "Gulf Heavy Industries Co.")
 
+        # Verify delivery and warranty ranks are properly populated
+        sup_a_score = next(s for s in report.ranked_suppliers if s.supplier_name == "Atlas Piping Solutions FZE")
+        sup_b_score = next(s for s in report.ranked_suppliers if s.supplier_name == "Gulf Heavy Industries Co.")
+        self.assertEqual(sup_b_score.delivery_rank, 1)  # 10 days vs 20 days
+        self.assertEqual(sup_a_score.delivery_rank, 2)
+        self.assertEqual(sup_a_score.warranty_rank, 1)  # 24 mos vs 12 mos
+        self.assertEqual(sup_b_score.warranty_rank, 2)
+
         # Verify Markdown table generation
         md_table = report.to_markdown_table()
         self.assertIn("Supplier Quotation Comparison Report", md_table)
@@ -218,6 +226,10 @@ class TestQuotationComparator(unittest.TestCase):
         comparator = QuotationComparator()
         with self.assertRaises(ValueError):
             comparator.compare([])
+
+    def test_zero_weights_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            QuotationComparator(price_weight=0, delivery_weight=0, warranty_weight=0, completeness_weight=0)
 
 
 if __name__ == "__main__":

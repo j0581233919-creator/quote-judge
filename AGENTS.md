@@ -19,16 +19,34 @@ QuoteJudge is an evidence-backed supplier quotation comparison system designed t
 `READY` -> `IN_PROGRESS` -> `IMPLEMENTED` -> `TESTED` -> `REVIEW_PENDING` -> `ACCEPTED` -> `RELEASE_READY`
 
 ## Task Ledger Summary
-- **Current Task**: QJ-003 — Comparative Quotation Engine & Missing Terms Auditor.
-- **Current Lifecycle State**: `IN_PROGRESS`
+- **Current Task**: QJ-004 — Bilingual Clarification Generator & Export Formats.
+- **Current Lifecycle State**: `READY`
 - **Current Owner**: Gemini Flash (Lead Engineering Executor).
 - **Independent Reviewer**: EGM Goldfish Codebase Details Auditor (`egm-codebase-details`).
 - **Branch**: main
-- **Last Verified Commit**: 7292667
-- **Independent Review Status**: Milestones QJ-001 and QJ-002 Certified ACCEPTED; 35/35 tests passing.
+- **Last Verified Commit**: 992942a
+- **Independent Review Status**: Milestones QJ-001, QJ-002, and QJ-003 Certified ACCEPTED; 42/42 tests passing.
 - **Completed Tasks**:
   - QJ-001: Supplier Quotation Data Models & Evidence Extraction (ACCEPTED)
   - QJ-002: Text-based PDF & Structured Document Ingestion (ACCEPTED)
+  - QJ-003: Comparative Quotation Engine & Missing Terms Auditor (ACCEPTED)
+
+## Verification Criteria for QJ-004
+1. **Bilingual Clarification Generator (`quote_judge/clarification.py`)**:
+   - Generates formal, professional clarification inquiry letters/emails tailored to individual suppliers.
+   - Dual-language support: English and Modern Standard Arabic (العربية).
+   - Grounds questions directly in missing or ambiguous commercial conditions (payment milestones, delivery lead times, Incoterms + named place, manufacturer warranty, VAT inclusion, freight/shipping charges, MOQ).
+   - Handles item-level clarifications when product descriptions, units, or specifications are ambiguous.
+2. **Export Engine with Formula Injection Defense (`quote_judge/export.py`)**:
+   - Structured CSV export for line-item comparison tables and commercial conditions matrices.
+   - Spreadsheet security: formula injection defense neutralizing cells beginning with `=`, `+`, `-`, `@`, `\t`, `\r` via leading single-quote escaping, with benign number and Arabic text preservation.
+   - Comprehensive Markdown report export (`.md`).
+   - Bit-exact JSON export (`.json`) with roundtrip fidelity.
+   - Batch clarification export: saves individual supplier inquiry letters in designated output directories.
+3. **Zero External Dependencies**:
+   - 100% pure Python standard library runtime (`csv`, `json`, `pathlib`, `re`, `dataclasses`).
+4. **Behavioral Test Suite & Demonstrations**:
+   - Automated tests covering clarification generation, Arabic letter formatting, CSV formula injection defense, and multi-format exports.
 
 ## Verification Criteria for QJ-003
 1. **Multi-Supplier Quotation Comparator (`quote_judge/comparator.py`)**:

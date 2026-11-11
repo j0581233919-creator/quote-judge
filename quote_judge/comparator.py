@@ -246,6 +246,9 @@ class QuotationComparator:
         QuoteJudge strictly avoids fabricating live rates; exchange rates must be explicitly passed.
         """
         total_w = price_weight + delivery_weight + warranty_weight + completeness_weight
+        if total_w <= 0:
+            raise ValueError("Sum of scoring weights must be strictly positive.")
+
         if abs(total_w - 1.0) > 0.01:
             # Normalize weights to sum to 1.0
             self.price_weight = price_weight / total_w
@@ -290,7 +293,7 @@ class QuotationComparator:
                 )
 
         # 2. Line-Item Alignment across Quotes
-        item_comparisons = self._align_line_items(quotes)
+        item_comparisons = self._align_line_items(quotes, can_convert=can_convert)
 
         # 3. Commercial Terms Comparison
         terms_comp = self._compare_terms(quotes)
@@ -325,7 +328,7 @@ class QuotationComparator:
             longest_warranty_supplier=terms_comp.longest_warranty_supplier,
         )
 
-    def _align_line_items(self, quotes: List[Quotation]) -> List[ItemComparison]:
+    def _align_line_items(self, quotes: List[Quotation], can_convert: bool = False) -> List[ItemComparison]:
         """Aligns line items across quotes using exact SKU or token similarity."""
         comparisons: List[ItemComparison] = []
         all_items: List[Tuple[str, LineItem]] = []  # (supplier_name, item)
@@ -346,25 +349,69 @@ class QuotationComparator:
             visited_items.add(key)
 
             # Search for matching items in other quotes
+            desc_strip = item.description.strip().lower()
             for other_sup, other_item in all_items:
                 other_key = (other_sup, other_item.item_id)
                 if other_key in visited_items or other_sup in matched:
                     continue
 
-                # Compare description similarity
+                other_desc_strip = other_item.description.strip().lower()
+                # Compare description similarity with non-trivial length guard
                 sim = token_similarity(item.description, other_item.description)
-                if sim >= 0.50 or (item.description.lower() in other_item.description.lower()) or (other_item.description.lower() in item.description.lower()):
+                is_sub = (
+                    len(desc_strip) >= 4 and len(other_desc_strip) >= 4 and (
+                        desc_strip in other_desc_strip or other_desc_strip in desc_strip
+                    )
+                )
+
+                if sim >= 0.50 or is_sub:
                     matched[other_sup] = other_item
                     visited_items.add(other_key)
 
             # Calculate price spread and lowest unit price
-            unit_prices = [it.unit_price for it in matched.values()]
-            lowest_price = min(unit_prices)
-            highest_price = max(unit_prices)
-            spread = ((highest_price - lowest_price) / lowest_price * 100.0) if lowest_price > 0 else 0.0
+            notes: List[str] = []
+            currencies_in_match = {it.currency.value for it in matched.values()}
 
-            lowest_sup = next(s for s, it in matched.items() if it.unit_price == lowest_price)
-            highest_sup = next(s for s, it in matched.items() if it.unit_price == highest_price)
+            if len(currencies_in_match) > 1:
+                if can_convert:
+                    # Normalize unit prices to base currency for fair spread & lowest price calculation
+                    norm_unit_prices = {
+                        s: it.unit_price * self.exchange_rates.get(it.currency.value, 1.0)
+                        for s, it in matched.items()
+                    }
+                    lowest_sup = min(norm_unit_prices.items(), key=lambda x: x[1])[0]
+                    highest_sup = max(norm_unit_prices.items(), key=lambda x: x[1])[0]
+                    lowest_price = matched[lowest_sup].unit_price
+                    highest_price = matched[highest_sup].unit_price
+                    norm_lowest = norm_unit_prices[lowest_sup]
+                    norm_highest = norm_unit_prices[highest_sup]
+                    spread = ((norm_highest - norm_lowest) / norm_lowest * 100.0) if norm_lowest > 0 else 0.0
+                    notes.append(
+                        f"Converted unit prices to {self.base_currency} for spread calculation: "
+                        f"lowest is {lowest_sup} (~{norm_lowest:.2f} {self.base_currency})."
+                    )
+                else:
+                    unit_prices = [it.unit_price for it in matched.values()]
+                    lowest_price = min(unit_prices)
+                    highest_price = max(unit_prices)
+                    spread = 0.0  # Cannot compute spread across heterogeneous currencies without rates
+                    lowest_sup = next(s for s, it in matched.items() if it.unit_price == lowest_price)
+                    highest_sup = next(s for s, it in matched.items() if it.unit_price == highest_price)
+                    notes.append(
+                        "Multiple currencies present without conversion rates; nominal spread not computed."
+                    )
+            else:
+                unit_prices = [it.unit_price for it in matched.values()]
+                lowest_price = min(unit_prices)
+                highest_price = max(unit_prices)
+                spread = ((highest_price - lowest_price) / lowest_price * 100.0) if lowest_price > 0 else 0.0
+                lowest_sup = next(s for s, it in matched.items() if it.unit_price == lowest_price)
+                highest_sup = next(s for s, it in matched.items() if it.unit_price == highest_price)
+
+            # Check for UOM mismatch
+            uoms_in_match = {it.unit_of_measure.lower() for it in matched.values()}
+            if len(uoms_in_match) > 1:
+                notes.append(f"Differing units of measure: {', '.join(uoms_in_match)}.")
 
             comparisons.append(
                 ItemComparison(
@@ -377,6 +424,7 @@ class QuotationComparator:
                     price_spread_percent=spread,
                     unit_of_measure=item.unit_of_measure,
                     currency=item.currency.value,
+                    notes=notes,
                 )
             )
 
@@ -525,5 +573,28 @@ class QuotationComparator:
         sorted_by_price = sorted(scores, key=lambda s: s.normalized_total_amount if s.normalized_total_amount is not None else s.total_amount)
         for rank, s in enumerate(sorted_by_price, 1):
             s.total_price_rank = rank
+
+        # Assign delivery ranks (fastest lead time = rank 1; unspecified goes last)
+        sorted_by_delivery = sorted(
+            scores,
+            key=lambda s: next(
+                (q.terms.delivery_lead_time_days for q in quotes if q.supplier_name == s.supplier_name and q.quote_id == s.quote_id and q.terms.delivery_lead_time_days is not None),
+                999999
+            )
+        )
+        for rank, s in enumerate(sorted_by_delivery, 1):
+            s.delivery_rank = rank
+
+        # Assign warranty ranks (longest warranty = rank 1; unspecified goes last)
+        sorted_by_warranty = sorted(
+            scores,
+            key=lambda s: next(
+                (q.terms.warranty_months for q in quotes if q.supplier_name == s.supplier_name and q.quote_id == s.quote_id and q.terms.warranty_months is not None),
+                -1
+            ),
+            reverse=True
+        )
+        for rank, s in enumerate(sorted_by_warranty, 1):
+            s.warranty_rank = rank
 
         return scores
